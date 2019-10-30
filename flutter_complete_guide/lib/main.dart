@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import './question.dart';
-//void main(){
-//  runApp(MyApp());
-//}
+
+import './quiz.dart';
+import './result.dart';
 
 void main() => runApp(MyApp());
 
@@ -17,45 +16,37 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   var _questionIndex = 0;
 
-  var _questions = [
+  final _questions = [
     'Dentre as opções qual sua cor favorita?',
     'Dentre as opções qual seu animal favorito?',
   ];
 
+  final _answers = [
+    ['vermelho', 'amarelo', 'azul', 'roxo'],
+    ['cão', 'gato', 'passaro', 'elefante']
+  ];
+
   void _questionAnswer() {
-    if (_questionIndex == _questions.length - 1) {
-      setState(() => _questionIndex = 0);
-    } else {
-      setState(() => _questionIndex = _questionIndex + 1);
-    }
-    print(_questionIndex);
+    setState(() => _questionIndex = _questionIndex + 1);
+  }
+
+  void _resetQuestionIndex() {
+    setState(() => _questionIndex = 0);
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Primeiro App'),
-        ),
-        body: Column(
-          children: [
-            Question(_questions[_questionIndex]),
-            RaisedButton(
-              child: Text('Resposta 1'),
-              onPressed: _questionAnswer,
-            ),
-            RaisedButton(
-              child: Text('Resposta 2'),
-              onPressed: _questionAnswer,
-            ),
-            RaisedButton(
-              child: Text('Resposta 3'),
-              onPressed: _questionAnswer,
-            ),
-          ],
-        ),
+        home: Scaffold(
+      appBar: AppBar(
+        title: Text('Quiz'),
       ),
-    );
+      body: _questionIndex < _questions.length
+          ? Quiz(
+              questions: _questions,
+              questionsIndex: _questionIndex,
+              answerFunction: _questionAnswer)
+          : Result(_resetQuestionIndex),
+    ));
   }
 }
